@@ -28,6 +28,4 @@ app = FastAPI(
 
 app.include_router(auth.router)
 app.include_router(rooms.router)
-# app.include_router(utils.router)
-# app.include_router(async_routes.router)
-# app.include_router(auth.router)
+app.include_router(bookings.router)

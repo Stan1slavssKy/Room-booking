@@ -46,6 +46,7 @@ class BookingResponse(BaseModel):
     class Config:
         orm_mode = True
 
+
 class BookingOptimizeRequest(BaseModel):
     start_time: datetime
     purpose: str

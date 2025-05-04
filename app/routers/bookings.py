@@ -11,8 +11,6 @@ from app.schemas.booking import (
     BookingCreate,
     BookingUpdate,
     BookingResponse,
-    BookingOptimizeRequest,
-    BookingOptimizeResponse,
 )
 from app.utils.auth import get_current_user
 from app.utils.scheduler import find_optimal_room
@@ -30,7 +28,7 @@ def create_booking(
     current_user: dict = Depends(get_current_user),
 ):
     """
-    Create a new one-hour booking for a room at the start of an hour.
+    Create a new one-hour booking for a room.
     Requires authentication.
     """
     # Check if room exists
@@ -68,6 +66,8 @@ def create_booking(
     db.add(db_booking)
     db.commit()
     db.refresh(db_booking)
+    # Add end_time to response
+    db_booking.end_time = end_time
     return db_booking
 
 
@@ -77,6 +77,9 @@ def get_bookings(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     Retrieve a list of all bookings.
     """
     bookings = db.query(Booking).offset(skip).limit(limit).all()
+    # Add end_time to each booking for response
+    for booking in bookings:
+        booking.end_time = booking.start_time + timedelta(hours=1)
     return bookings
 
 
@@ -90,6 +93,8 @@ def get_booking(booking_id: int, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
+    # Add end_time to response
+    booking.end_time = booking.start_time + timedelta(hours=1)
     return booking
 
 
@@ -101,7 +106,7 @@ def update_booking(
     current_user: dict = Depends(get_current_user),
 ):
     """
-    Update a booking's details (one-hour duration, start of hour).
+    Update a booking's details (one-hour duration).
     Requires authentication and ownership.
     """
     db_booking = db.query(Booking).filter(Booking.id == booking_id).first()
@@ -145,6 +150,8 @@ def update_booking(
 
     db.commit()
     db.refresh(db_booking)
+    # Add end_time to response
+    db_booking.end_time = db_booking.start_time + timedelta(hours=1)
     return db_booking
 
 
@@ -175,22 +182,39 @@ def delete_booking(
     return None
 
 
-@router.post("/optimize", response_model=BookingOptimizeResponse)
-def optimize_booking(request: BookingOptimizeRequest, db: Session = Depends(get_db)):
+@router.post(
+    "/optimize", response_model=BookingResponse, status_code=status.HTTP_201_CREATED
+)
+def optimize_booking(
+    booking: BookingCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     """
-    Find the optimal room for a one-hour slot based on start time and required capacity.
-    Returns the room ID.
+    Find and book the optimal room for a one-hour slot.
+    Requires authentication.
     """
-    end_time = request.start_time + timedelta(hours=1)
+    end_time = booking.start_time + timedelta(hours=1)
     optimal_room = find_optimal_room(
-        db, request.start_time, end_time, request.required_capacity
+        db, booking.start_time, end_time, booking.required_capacity
     )
     if not optimal_room:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="No suitable room available"
         )
 
-    return BookingOptimizeResponse(room_id=optimal_room.id)
+    db_booking = Booking(
+        room_id=optimal_room.id,
+        user_id=current_user["id"],
+        start_time=booking.start_time,
+        purpose=booking.purpose,
+    )
+    db.add(db_booking)
+    db.commit()
+    db.refresh(db_booking)
+    # Add end_time to response
+    db_booking.end_time = db_booking.start_time + timedelta(hours=1)
+    return db_booking
 
 
 @router.get("/available-slots", response_model=List[datetime])
@@ -215,8 +239,7 @@ def get_available_slots(
 
     # Check each hour for availability
     for hour in range(start_hour, end_hour):
-        slot_start = booking_date.replace(
-            hour=hour, minute=0, second=0, microsecond=0)
+        slot_start = booking_date.replace(hour=hour, minute=0, second=0, microsecond=0)
         slot_end = slot_start + timedelta(hours=1)
 
         # Check for overlapping bookings

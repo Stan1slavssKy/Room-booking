@@ -19,7 +19,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # HTTP Bearer scheme for JWT token
 bearer_scheme = HTTPBearer(
     scheme_name="JWT",
-    description="Enter 'Bearer <your_jwt_token>' in the Value field (e.g., 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'). Obtain the token via /auth/login.",
+    description="Enter '<your_jwt_token>' in the Value field. Obtain the token via /auth/login.",
 )
 
 

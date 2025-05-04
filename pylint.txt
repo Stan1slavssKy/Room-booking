@@ -1,0 +1,79 @@
+************* Module app.main
+app/main.py:9:0: W0311: Bad indentation. Found 3 spaces, expected 4 (bad-indentation)
+app/main.py:10:0: W0311: Bad indentation. Found 3 spaces, expected 4 (bad-indentation)
+app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/main.py:8:0: C0116: Missing function or method docstring (missing-function-docstring)
+app/main.py:8:19: W0621: Redefining name 'app' from outer scope (line 13) (redefined-outer-name)
+app/main.py:8:19: W0613: Unused argument 'app' (unused-argument)
+app/main.py:3:0: C0411: standard import "contextlib.asynccontextmanager" should be placed before third party import "fastapi.FastAPI" and first party import "app.routers.auth"  (wrong-import-order)
+app/main.py:2:0: W0611: Unused users imported from app.routers (unused-import)
+************* Module app.db
+app/db.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/db.py:14:0: C0116: Missing function or method docstring (missing-function-docstring)
+app/db.py:4:0: C0411: standard import "os" should be placed before third party imports "sqlalchemy.create_engine", "sqlalchemy.ext.declarative.declarative_base", "sqlalchemy.orm.sessionmaker" (wrong-import-order)
+************* Module app.routers.bookings
+app/routers/bookings.py:8:0: C0301: Line too long (126/100) (line-too-long)
+app/routers/bookings.py:25:0: C0301: Line too long (122/100) (line-too-long)
+app/routers/bookings.py:45:0: C0301: Line too long (120/100) (line-too-long)
+app/routers/bookings.py:77:0: C0301: Line too long (146/100) (line-too-long)
+app/routers/bookings.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/bookings.py:87:0: C0301: Line too long (114/100) (line-too-long)
+app/routers/bookings.py:103:0: C0301: Line too long (124/100) (line-too-long)
+app/routers/bookings.py:108:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/bookings.py:114:0: C0301: Line too long (115/100) (line-too-long)
+app/routers/bookings.py:122:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/bookings.py:124:0: C0301: Line too long (114/100) (line-too-long)
+app/routers/bookings.py:125:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/bookings.py:139:0: C0301: Line too long (103/100) (line-too-long)
+app/routers/bookings.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/routers/bookings.py:17:0: C0116: Missing function or method docstring (missing-function-docstring)
+app/routers/bookings.py:114:0: R1711: Useless return at end of function or method (useless-return)
+app/routers/bookings.py:3:0: C0411: standard import "typing.List" should be placed before third party imports "fastapi.APIRouter", "sqlalchemy.orm.Session" (wrong-import-order)
+app/routers/bookings.py:4:0: C0411: standard import "datetime.datetime" should be placed before third party imports "fastapi.APIRouter", "sqlalchemy.orm.Session" (wrong-import-order)
+************* Module app.routers.rooms
+app/routers/rooms.py:25:0: C0301: Line too long (113/100) (line-too-long)
+app/routers/rooms.py:58:0: C0301: Line too long (134/100) (line-too-long)
+app/routers/rooms.py:66:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/rooms.py:70:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/rooms.py:77:0: C0301: Line too long (109/100) (line-too-long)
+app/routers/rooms.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/rooms.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/routers/rooms.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
+app/routers/rooms.py:25:65: W0613: Unused argument 'current_user' (unused-argument)
+app/routers/rooms.py:58:86: W0613: Unused argument 'current_user' (unused-argument)
+app/routers/rooms.py:77:0: R1711: Useless return at end of function or method (useless-return)
+app/routers/rooms.py:77:61: W0613: Unused argument 'current_user' (unused-argument)
+app/routers/rooms.py:3:0: C0411: standard import "typing.List" should be placed before third party imports "fastapi.APIRouter", "sqlalchemy.orm.Session" (wrong-import-order)
+************* Module app.routers.auth
+app/routers/auth.py:31:0: C0301: Line too long (106/100) (line-too-long)
+app/routers/auth.py:32:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/auth.py:35:0: C0301: Line too long (103/100) (line-too-long)
+app/routers/auth.py:36:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/auth.py:57:0: C0303: Trailing whitespace (trailing-whitespace)
+app/routers/auth.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/routers/auth.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module app.routers.users
+app/routers/users.py:1:0: R0801: Similar lines in 2 files
+==app.routers.bookings:[14:30]
+==app.routers.rooms:[12:29]
+)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@router.post("/", response_model=RoomResponse, status_code=status.HTTP_201_CREATED)
+def create_room(room: RoomCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    """
+    Create a new meeting room.
+    Requires authentication.
+    """ (duplicate-code)
+
+-----------------------------------
+Your code has been rated at 7.31/10
+

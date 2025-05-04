@@ -1,0 +1,23 @@
+erDiagram
+    USERS ||--o{ BOOKINGS : makes
+    ROOMS ||--o{ BOOKINGS : has
+    USERS {
+        int id PK
+        string username UK
+        string email UK
+        string hashed_password
+    }
+    ROOMS {
+        int id PK
+        string name
+        int capacity
+        string location
+    }
+    BOOKINGS {
+        int id PK
+        int room_id FK
+        int user_id FK
+        datetime start_time
+        datetime end_time
+        string purpose
+    }

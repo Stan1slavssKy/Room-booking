@@ -1,6 +1,18 @@
 # Room-booking
 A simple application that provide room booking functionality with REST API based on the FastAPI Python library.
 
+# Database entities relationships diagram
+
+<div style="width: 500px;">
+  <img src="./docs/db_re_diagram.png" style="width: 100%;">
+</div>
+
+PK: Primary key.
+
+FK: Foreign key.
+
+UK: Unique constraint.
+
 # Requirements
 python >= 3.10
 

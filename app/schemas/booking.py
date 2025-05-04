@@ -35,10 +35,21 @@ class BookingUpdate(BaseModel):
         return value
 
 
-class BookingResponse(BookingBase):
+class BookingResponse(BaseModel):
     id: int
+    room_id: int
     user_id: int
-    end_time: datetime  # Included in response for clarity
+    start_time: datetime
+    end_time: datetime
+    purpose: str
+
+    class Config:
+        orm_mode = True
+
+class BookingOptimizeRequest(BaseModel):
+    start_time: datetime
+    purpose: str
+    required_capacity: int
 
     class Config:
         orm_mode = True

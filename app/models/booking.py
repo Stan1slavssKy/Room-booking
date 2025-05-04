@@ -10,6 +10,7 @@ class Booking(Base):
     room_id = Column(Integer, ForeignKey("rooms.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
     purpose = Column(String, nullable=True)
 
     room = relationship("Room", back_populates="bookings")

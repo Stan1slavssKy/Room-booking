@@ -2,3 +2,4 @@ venv/
 myenv/
 .vscode/
 __pycache__/
+out/

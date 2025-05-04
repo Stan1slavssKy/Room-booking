@@ -1,79 +1,77 @@
 ************* Module app.main
-app/main.py:9:0: W0311: Bad indentation. Found 3 spaces, expected 4 (bad-indentation)
-app/main.py:10:0: W0311: Bad indentation. Found 3 spaces, expected 4 (bad-indentation)
 app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/main.py:8:0: C0116: Missing function or method docstring (missing-function-docstring)
-app/main.py:8:19: W0621: Redefining name 'app' from outer scope (line 13) (redefined-outer-name)
-app/main.py:8:19: W0613: Unused argument 'app' (unused-argument)
-app/main.py:3:0: C0411: standard import "contextlib.asynccontextmanager" should be placed before third party import "fastapi.FastAPI" and first party import "app.routers.auth"  (wrong-import-order)
-app/main.py:2:0: W0611: Unused users imported from app.routers (unused-import)
 ************* Module app.db
 app/db.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/db.py:14:0: C0116: Missing function or method docstring (missing-function-docstring)
-app/db.py:4:0: C0411: standard import "os" should be placed before third party imports "sqlalchemy.create_engine", "sqlalchemy.ext.declarative.declarative_base", "sqlalchemy.orm.sessionmaker" (wrong-import-order)
+app/db.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module app.routers.bookings
-app/routers/bookings.py:8:0: C0301: Line too long (126/100) (line-too-long)
-app/routers/bookings.py:25:0: C0301: Line too long (122/100) (line-too-long)
-app/routers/bookings.py:45:0: C0301: Line too long (120/100) (line-too-long)
-app/routers/bookings.py:77:0: C0301: Line too long (146/100) (line-too-long)
-app/routers/bookings.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/bookings.py:87:0: C0301: Line too long (114/100) (line-too-long)
-app/routers/bookings.py:103:0: C0301: Line too long (124/100) (line-too-long)
-app/routers/bookings.py:108:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/bookings.py:114:0: C0301: Line too long (115/100) (line-too-long)
-app/routers/bookings.py:122:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/bookings.py:124:0: C0301: Line too long (114/100) (line-too-long)
-app/routers/bookings.py:125:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/bookings.py:139:0: C0301: Line too long (103/100) (line-too-long)
 app/routers/bookings.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/routers/bookings.py:17:0: C0116: Missing function or method docstring (missing-function-docstring)
-app/routers/bookings.py:114:0: R1711: Useless return at end of function or method (useless-return)
-app/routers/bookings.py:3:0: C0411: standard import "typing.List" should be placed before third party imports "fastapi.APIRouter", "sqlalchemy.orm.Session" (wrong-import-order)
-app/routers/bookings.py:4:0: C0411: standard import "datetime.datetime" should be placed before third party imports "fastapi.APIRouter", "sqlalchemy.orm.Session" (wrong-import-order)
+app/routers/bookings.py:152:0: R1711: Useless return at end of function or method (useless-return)
+app/routers/bookings.py:3:0: C0411: standard import "datetime.datetime" should be placed before third party import "fastapi.APIRouter" (wrong-import-order)
 ************* Module app.routers.rooms
-app/routers/rooms.py:25:0: C0301: Line too long (113/100) (line-too-long)
-app/routers/rooms.py:58:0: C0301: Line too long (134/100) (line-too-long)
-app/routers/rooms.py:66:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/rooms.py:70:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/rooms.py:77:0: C0301: Line too long (109/100) (line-too-long)
-app/routers/rooms.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
 app/routers/rooms.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/routers/rooms.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
-app/routers/rooms.py:25:65: W0613: Unused argument 'current_user' (unused-argument)
-app/routers/rooms.py:58:86: W0613: Unused argument 'current_user' (unused-argument)
-app/routers/rooms.py:77:0: R1711: Useless return at end of function or method (useless-return)
-app/routers/rooms.py:77:61: W0613: Unused argument 'current_user' (unused-argument)
+app/routers/rooms.py:20:4: W0613: Unused argument 'current_user' (unused-argument)
+app/routers/rooms.py:60:4: W0613: Unused argument 'current_user' (unused-argument)
+app/routers/rooms.py:82:0: R1711: Useless return at end of function or method (useless-return)
+app/routers/rooms.py:85:4: W0613: Unused argument 'current_user' (unused-argument)
 app/routers/rooms.py:3:0: C0411: standard import "typing.List" should be placed before third party imports "fastapi.APIRouter", "sqlalchemy.orm.Session" (wrong-import-order)
 ************* Module app.routers.auth
-app/routers/auth.py:31:0: C0301: Line too long (106/100) (line-too-long)
-app/routers/auth.py:32:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/auth.py:35:0: C0301: Line too long (103/100) (line-too-long)
-app/routers/auth.py:36:0: C0303: Trailing whitespace (trailing-whitespace)
-app/routers/auth.py:57:0: C0303: Trailing whitespace (trailing-whitespace)
 app/routers/auth.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/routers/auth.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
-************* Module app.routers.users
-app/routers/users.py:1:0: R0801: Similar lines in 2 files
-==app.routers.bookings:[14:30]
-==app.routers.rooms:[12:29]
-)
+************* Module app.utils.auth
+app/utils/auth.py:22:0: C0301: Line too long (161/100) (line-too-long)
+app/utils/auth.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/utils/auth.py:62:8: W0707: Consider explicitly re-raising using 'raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f'Could not validate credentials: {str(e)}', headers={'WWW-Authenticate': 'Bearer'}) from e' (raise-missing-from)
+app/utils/auth.py:4:0: C0411: standard import "datetime.datetime" should be placed before third party imports "fastapi.Depends", "fastapi.security.HTTPBearer", "jose.JWTError" (wrong-import-order)
+************* Module app.utils.scheduler
+app/utils/scheduler.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.models.room
+app/models/room.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/models/room.py:6:0: C0115: Missing class docstring (missing-class-docstring)
+app/models/room.py:6:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+************* Module app.models.booking
+app/models/booking.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/models/booking.py:6:0: C0115: Missing class docstring (missing-class-docstring)
+app/models/booking.py:6:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+************* Module app.models.user
+app/models/user.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/models/user.py:6:0: C0115: Missing class docstring (missing-class-docstring)
+app/models/user.py:6:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+app/models/user.py:3:0: C0411: third party import "sqlalchemy.orm.relationship" should be placed before first party import "app.db.Base"  (wrong-import-order)
+app/models/user.py:3:0: C0412: Imports from package sqlalchemy are not grouped (ungrouped-imports)
+************* Module app.schemas.room
+app/schemas/room.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/schemas/room.py:5:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/room.py:11:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/room.py:15:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/room.py:21:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/room.py:24:4: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/room.py:24:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+app/schemas/room.py:2:0: C0411: standard import "typing.Optional" should be placed before third party import "pydantic.BaseModel" (wrong-import-order)
+************* Module app.schemas.booking
+app/schemas/booking.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/schemas/booking.py:6:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:12:4: C0116: Missing function or method docstring (missing-function-docstring)
+app/schemas/booking.py:12:4: E0213: Method 'validate_start_time' should have "self" as first argument (no-self-argument)
+app/schemas/booking.py:20:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:24:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:30:4: C0116: Missing function or method docstring (missing-function-docstring)
+app/schemas/booking.py:30:4: E0213: Method 'validate_start_time' should have "self" as first argument (no-self-argument)
+app/schemas/booking.py:38:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:43:4: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:43:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+app/schemas/booking.py:47:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:52:4: C0116: Missing function or method docstring (missing-function-docstring)
+app/schemas/booking.py:52:4: E0213: Method 'validate_start_time' should have "self" as first argument (no-self-argument)
+app/schemas/booking.py:60:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/booking.py:2:0: C0411: standard import "datetime.datetime" should be placed before third party import "pydantic.BaseModel" (wrong-import-order)
+app/schemas/booking.py:3:0: C0411: standard import "typing.Optional" should be placed before third party import "pydantic.BaseModel" (wrong-import-order)
+************* Module app.schemas.user
+app/schemas/user.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/schemas/user.py:4:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/user.py:9:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/user.py:13:0: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/user.py:16:4: C0115: Missing class docstring (missing-class-docstring)
+app/schemas/user.py:16:4: R0903: Too few public methods (0/2) (too-few-public-methods)
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-@router.post("/", response_model=RoomResponse, status_code=status.HTTP_201_CREATED)
-def create_room(room: RoomCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    """
-    Create a new meeting room.
-    Requires authentication.
-    """ (duplicate-code)
-
------------------------------------
-Your code has been rated at 7.31/10
+------------------------------------------------------------------
+Your code has been rated at 7.77/10 (previous run: 7.71/10, +0.06)
 

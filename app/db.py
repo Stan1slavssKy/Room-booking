@@ -1,7 +1,7 @@
+import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./data/rooms_booking.db"
@@ -17,3 +17,12 @@ def init_database():
     if not os.path.exists("./data"):
         os.makedirs("./data")
     Base.metadata.create_all(bind=engine)
+
+
+def get_db():
+    """Provide a database session."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

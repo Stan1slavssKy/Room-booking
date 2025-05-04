@@ -17,7 +17,8 @@ def find_optimal_room(
         )
 
     # Get all rooms with sufficient capacity
-    available_rooms = db.query(Room).filter(Room.capacity >= required_capacity).all()
+    available_rooms = db.query(Room).filter(
+        Room.capacity >= required_capacity).all()
 
     # Check for conflicts
     optimal_room = None

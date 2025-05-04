@@ -1,11 +1,12 @@
-from fastapi import FastAPI
-from app.routers import auth, users, rooms, bookings
 from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from app.routers import auth, rooms, bookings
 from app.db import init_database
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
+    "lifespan for initing database"
     init_database()
     yield
 

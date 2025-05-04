@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status
 from datetime import datetime, timedelta, date
-from app.db import SessionLocal
+
+from sqlalchemy.orm import Session
+
+from app.db import get_db
 from app.models.booking import Booking
 from app.models.room import Room
 from app.schemas.booking import (
@@ -19,14 +21,6 @@ router = APIRouter(
     prefix="/bookings",
     tags=["bookings"],
 )
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/", response_model=BookingResponse, status_code=status.HTTP_201_CREATED)
@@ -221,7 +215,8 @@ def get_available_slots(
 
     # Check each hour for availability
     for hour in range(start_hour, end_hour):
-        slot_start = booking_date.replace(hour=hour, minute=0, second=0, microsecond=0)
+        slot_start = booking_date.replace(
+            hour=hour, minute=0, second=0, microsecond=0)
         slot_end = slot_start + timedelta(hours=1)
 
         # Check for overlapping bookings

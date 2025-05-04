@@ -4,11 +4,12 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from app.db import SessionLocal
+from app.db import get_db
 from app.models.user import User
 
 # JWT configuration
-SECRET_KEY = "secure-secret-key-1234567890"  # Consistent key for encoding/decoding
+# Consistent key for encoding/decoding
+SECRET_KEY = "secure-secret-key-1234567890"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -39,15 +40,6 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-def get_db():
-    """Provide a database session."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def get_current_user(

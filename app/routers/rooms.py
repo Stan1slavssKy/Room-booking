@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from app.db import SessionLocal
+from app.db import get_db
 from app.models.room import Room
 from app.schemas.room import RoomCreate, RoomUpdate, RoomResponse
 from app.utils.auth import get_current_user
@@ -11,14 +11,6 @@ router = APIRouter(
     prefix="/rooms",
     tags=["rooms"],
 )
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/", response_model=RoomResponse, status_code=status.HTTP_201_CREATED)

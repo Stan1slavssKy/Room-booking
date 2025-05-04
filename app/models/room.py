@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String
 from app.db import Base
 from sqlalchemy.orm import relationship
 
+
 class Room(Base):
     __tablename__ = "rooms"
 
@@ -10,4 +11,6 @@ class Room(Base):
     capacity = Column(Integer, nullable=False)
     location = Column(String, nullable=True)
 
-    bookings = relationship("Booking", back_populates="room", cascade="all, delete-orphan")
+    bookings = relationship(
+        "Booking", back_populates="room", cascade="all, delete-orphan"
+    )

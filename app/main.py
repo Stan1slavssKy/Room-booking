@@ -6,8 +6,8 @@ from app.db import init_database
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-   init_database()
-   yield
+    init_database()
+    yield
 
 
 app = FastAPI(
@@ -22,7 +22,7 @@ app = FastAPI(
     license_info={
         "name": "MIT",
         "url": "https://opensource.org/licenses/MIT",
-    }
+    },
 )
 
 

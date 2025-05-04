@@ -18,16 +18,19 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # HTTP Bearer scheme for JWT token
 bearer_scheme = HTTPBearer(
     scheme_name="JWT",
-    description="Enter 'Bearer <your_jwt_token>' in the Value field (e.g., 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'). Obtain the token via /auth/login."
+    description="Enter 'Bearer <your_jwt_token>' in the Value field (e.g., 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'). Obtain the token via /auth/login.",
 )
+
 
 def verify_password(plain_password, hashed_password):
     """Verify a plain password against a hashed password."""
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password):
     """Hash a password for storage."""
     return pwd_context.hash(password)
+
 
 def create_access_token(data: dict):
     """Create a JWT access token with an expiration time."""
@@ -37,6 +40,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
 def get_db():
     """Provide a database session."""
     db = SessionLocal()
@@ -45,7 +49,11 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme), db: Session = Depends(get_db)):
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: Session = Depends(get_db),
+):
     """Verify JWT token from Bearer header and return the current user."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

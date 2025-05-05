@@ -1,80 +1,7 @@
-import os
 import pytest
 from fastapi import status
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
-
-from app.main import app
-from app.db import Base, get_db
 from app.models.room import Room
-from app.models.user import User
-from app.utils.auth import get_password_hash
-
-# Test database setup
-if not os.path.exists("./out"):
-    os.makedirs("./out")
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./out/tests.db"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Create test tables
-Base.metadata.create_all(bind=engine)
-
-
-# Dependency override
-def override_get_db():
-    try:
-        db = TestingSessionLocal()
-        yield db
-    finally:
-        db.close()
-
-
-app.dependency_overrides[get_db] = override_get_db
-
-client = TestClient(app)
-
-
-# Fixtures
-@pytest.fixture(autouse=True)
-def clear_db():
-    with engine.connect() as conn:
-        trans = conn.begin()
-        conn.execute(text("PRAGMA foreign_keys = OFF"))
-        for table in reversed(Base.metadata.sorted_tables):
-            conn.execute(table.delete())
-        conn.execute(text("PRAGMA foreign_keys = ON"))
-        trans.commit()
-
-
-@pytest.fixture
-def test_db():
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-def get_next_user():
-    if not hasattr(get_next_user, "user_count"):
-        get_next_user.user_count = 0
-    get_next_user.user_count += 1
-    return get_next_user.user_count
-
-
-@pytest.fixture
-def test_user_data():
-    username = get_next_user()
-    return {
-        "username": f"{username}",
-        "email": "testuser@example.com",
-        "password": "testpassword",
-    }
+from tests.conf_tests import client, clear_db, test_db, auth_headers
 
 
 @pytest.fixture
@@ -84,31 +11,6 @@ def test_room(test_db):
     test_db.commit()
     test_db.refresh(room)
     return room
-
-
-@pytest.fixture
-def auth_headers(test_user_data):
-    userinfo = test_user_data
-
-    # First register the test user
-    register_response = client.post(
-        "/auth/register",
-        json={
-            "username": userinfo["username"],
-            "email": userinfo["email"],
-            "password": userinfo["password"],
-        },
-    )
-    assert register_response.status_code == status.HTTP_201_CREATED
-
-    # Then login to get the token
-    login_response = client.post(
-        "/auth/login",
-        data={"username": userinfo["username"], "password": userinfo["password"]},
-    )
-    assert login_response.status_code == status.HTTP_200_OK
-    token = login_response.json()["access_token"]
-    return {"Authorization": f"Bearer {token}"}
 
 
 # Tests

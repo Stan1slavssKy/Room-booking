@@ -3,3 +3,4 @@ myenv/
 .vscode/
 __pycache__/
 out/
+pylint.txt

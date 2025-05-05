@@ -22,6 +22,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 # Create test tables
 Base.metadata.create_all(bind=engine)
 
+
 # Dependency override
 def override_get_db():
     try:
@@ -30,9 +31,11 @@ def override_get_db():
     finally:
         db.close()
 
+
 app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
+
 
 # Fixtures
 @pytest.fixture(autouse=True)
@@ -46,6 +49,7 @@ def clear_db():
         conn.execute(text("PRAGMA foreign_keys = ON"))
         trans.commit()
 
+
 @pytest.fixture
 def test_db():
     """Provide a database session for testing"""
@@ -55,12 +59,14 @@ def test_db():
     finally:
         db.close()
 
+
 def get_next_user():
     """Helper function to generate unique usernames"""
     if not hasattr(get_next_user, "user_count"):
         get_next_user.user_count = 0
     get_next_user.user_count += 1
     return get_next_user.user_count
+
 
 @pytest.fixture
 def test_user_data():
@@ -72,6 +78,7 @@ def test_user_data():
         "password": "testpassword",
     }
 
+
 @pytest.fixture
 def test_user(test_db):
     """Fixture to create a test user in the database"""
@@ -81,15 +88,16 @@ def test_user(test_db):
         "email": f"user_{username}@example.com",
         "hashed_password": "testpassword",
     }
-    
+
     db_user = test_db.query(User).filter(User.username == user_data["username"]).first()
     if not db_user:
         db_user = User(**user_data)
         test_db.add(db_user)
         test_db.commit()
         test_db.refresh(db_user)
-    
+
     return db_user
+
 
 @pytest.fixture
 def auth_headers(test_db, test_user_data):
@@ -99,7 +107,7 @@ def auth_headers(test_db, test_user_data):
     user = User(
         username=test_user_data["username"],
         email=test_user_data["email"],
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
     )
     test_db.add(user)
     test_db.commit()
@@ -109,8 +117,8 @@ def auth_headers(test_db, test_user_data):
         "/auth/login",
         data={
             "username": test_user_data["username"],
-            "password": test_user_data["password"]
-        }
+            "password": test_user_data["password"],
+        },
     )
     token = login_response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}

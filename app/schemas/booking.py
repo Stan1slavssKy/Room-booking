@@ -1,6 +1,7 @@
 from pydantic import BaseModel, validator
 from datetime import datetime
 from typing import Optional
+from app.utils.validation_helpers import validate_start_time
 
 
 class BookingBase(BaseModel):
@@ -9,12 +10,8 @@ class BookingBase(BaseModel):
     purpose: Optional[str] = None
 
     @validator("start_time")
-    def validate_start_time(cls, value):
-        if value.minute != 0 or value.second != 0 or value.microsecond != 0:
-            raise ValueError(
-                "Start time must be at the beginning of an hour (e.g., 13:00:00)"
-            )
-        return value
+    def check_start_time(cls, value):
+        return validate_start_time(value)
 
 
 class BookingCreate(BookingBase):
@@ -27,12 +24,8 @@ class BookingUpdate(BaseModel):
     purpose: Optional[str] = None
 
     @validator("start_time")
-    def validate_start_time(cls, value):
-        if value and (value.minute != 0 or value.second != 0 or value.microsecond != 0):
-            raise ValueError(
-                "Start time must be at the beginning of an hour (e.g., 13:00:00)"
-            )
-        return value
+    def check_start_time(cls, value):
+        return validate_start_time(value)
 
 
 class BookingResponse(BaseModel):

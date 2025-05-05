@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from app.models.room import Room
 from app.models.booking import Booking
+from app.utils.validation_helpers import validate_start_time
 
 
 def find_optimal_room(
@@ -11,10 +12,7 @@ def find_optimal_room(
     Find the smallest available room that meets the capacity requirement for a one-hour slot.
     """
     # Validate start_time is at the start of an hour
-    if start_time.minute != 0 or start_time.second != 0 or start_time.microsecond != 0:
-        raise ValueError(
-            "Start time must be at the beginning of an hour (e.g., 13:00:00)"
-        )
+    validate_start_time(start_time)
 
     # Get all rooms with sufficient capacity
     available_rooms = db.query(Room).filter(Room.capacity >= required_capacity).all()

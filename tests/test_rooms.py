@@ -1,7 +1,7 @@
 import pytest
 from fastapi import status
 from app.models.room import Room
-from tests.conf_tests import client, clear_db, test_db, auth_headers
+from tests.conf_tests import client, clear_db, test_user_data, test_db, auth_headers
 
 
 @pytest.fixture

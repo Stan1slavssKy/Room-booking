@@ -13,11 +13,6 @@ from app.schemas.booking import (
 )
 from app.utils.auth import get_current_user
 from app.utils.scheduler import find_optimal_room
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/bookings",
@@ -48,30 +43,20 @@ def create_booking(
 
     Returns the created booking with ID, room ID, user ID, start time, end time, and purpose.
     """
-    logger.debug(
-        f"Creating booking for user: {current_user['username']}, room_id: {booking.room_id}"
-    )
 
     # Check if room exists and capacity is sufficient
     room = db.query(Room).filter(Room.id == booking.room_id).first()
     if not room:
-        logger.error(f"Room not found: {booking.room_id}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Room not found"
         )
     if room.capacity < booking.required_capacity:
-        logger.error(
-            f"Room capacity insufficient: {room.capacity} < {booking.required_capacity}"
-        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Room capacity insufficient"
         )
 
     # Validate start_time is at the start of an hour
     if booking.start_time.minute != 0 or booking.start_time.second != 0:
-        logger.error(
-            f"Invalid start_time: {booking.start_time}, must be at start of hour"
-        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Start time must be at the start of an hour",
@@ -79,7 +64,6 @@ def create_booking(
 
     # Calculate end_time
     end_time = booking.start_time + timedelta(hours=1)
-    logger.debug(f"Calculated end_time: {end_time}")
 
     # Check for overlapping bookings
     overlapping = (
@@ -92,9 +76,6 @@ def create_booking(
         .first()
     )
     if overlapping:
-        logger.error(
-            f"Overlapping booking found for room_id: {booking.room_id}, time: {booking.start_time} to {end_time}"
-        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Room is already booked for this time slot",
@@ -111,7 +92,6 @@ def create_booking(
     db.add(db_booking)
     db.commit()
     db.refresh(db_booking)
-    logger.debug(f"Created booking: {db_booking.id}, end_time: {db_booking.end_time}")
     return db_booking
 
 
@@ -135,7 +115,6 @@ def get_bookings(
     Returns a list of bookings with ID, room ID, user ID, start time, end time, and purpose.
     """
     bookings = db.query(Booking).offset(skip).limit(limit).all()
-    logger.debug(f"Retrieved {len(bookings)} bookings")
     return bookings
 
 
@@ -158,11 +137,9 @@ def get_booking(
     """
     booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not booking:
-        logger.error(f"Booking not found: {booking_id}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
-    logger.debug(f"Retrieved booking: {booking_id}")
     return booking
 
 
@@ -191,15 +168,11 @@ def update_booking(
     """
     db_booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not db_booking:
-        logger.error(f"Booking not found: {booking_id}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
 
     if db_booking.user_id != current_user["id"]:
-        logger.error(
-            f"User {current_user['username']} not authorized to update booking {booking_id}"
-        )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to update this booking",
@@ -211,7 +184,6 @@ def update_booking(
 
     # Validate new start_time
     if new_start_time.minute != 0 or new_start_time.second != 0:
-        logger.error(f"Invalid start_time: {new_start_time}, must be at start of hour")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Start time must be at the start of an hour",
@@ -222,7 +194,6 @@ def update_booking(
         room_id = booking_update.room_id or db_booking.room_id
         room = db.query(Room).filter(Room.id == room_id).first()
         if not room:
-            logger.error(f"Room not found: {room_id}")
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Room not found"
             )
@@ -237,9 +208,6 @@ def update_booking(
             .first()
         )
         if overlapping:
-            logger.error(
-                f"Overlapping booking found for room_id: {room_id}, time: {new_start_time} to {new_end_time}"
-            )
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Room is already booked for this time slot",
@@ -253,7 +221,6 @@ def update_booking(
     db_booking.end_time = new_end_time
     db.commit()
     db.refresh(db_booking)
-    logger.debug(f"Updated booking: {booking_id}, end_time: {db_booking.end_time}")
     return db_booking
 
 
@@ -276,15 +243,11 @@ def delete_booking(
     """
     db_booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not db_booking:
-        logger.error(f"Booking not found: {booking_id}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
 
     if db_booking.user_id != current_user["id"]:
-        logger.error(
-            f"User {current_user['username']} not authorized to delete booking {booking_id}"
-        )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to delete this booking",
@@ -292,7 +255,6 @@ def delete_booking(
 
     db.delete(db_booking)
     db.commit()
-    logger.debug(f"Deleted booking: {booking_id}")
     return None
 
 
@@ -318,15 +280,9 @@ def optimize_booking(
 
     Returns the created booking.
     """
-    logger.debug(
-        f"Optimizing booking for user: {current_user['username']}, start_time: {booking.start_time}, capacity: {booking.required_capacity}"
-    )
 
     # Validate start_time
     if booking.start_time.minute != 0 or booking.start_time.second != 0:
-        logger.error(
-            f"Invalid start_time: {booking.start_time}, must be at start of hour"
-        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Start time must be at the start of an hour",
@@ -334,16 +290,12 @@ def optimize_booking(
 
     # Calculate end_time
     end_time = booking.start_time + timedelta(hours=1)
-    logger.debug(f"Calculated end_time: {end_time}")
 
     # Find optimal room
     optimal_room = find_optimal_room(
         db, booking.start_time, end_time, booking.required_capacity
     )
     if not optimal_room:
-        logger.error(
-            f"No suitable room available for start_time: {booking.start_time}, capacity: {booking.required_capacity}"
-        )
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="No suitable room available"
         )
@@ -359,9 +311,6 @@ def optimize_booking(
     db.add(db_booking)
     db.commit()
     db.refresh(db_booking)
-    logger.debug(
-        f"Created optimized booking: {db_booking.id}, room_id: {optimal_room.id}, end_time: {db_booking.end_time}"
-    )
     return db_booking
 
 
@@ -387,13 +336,9 @@ def get_available_slots(
 
     Returns a list of available slots with start_time and end_time.
     """
-    logger.debug(
-        f"Fetching available slots for room_id: {room_id}, date: {date}, duration: {duration} minutes, user: {current_user['username']}"
-    )
 
     # Validate inputs
     if duration <= 0:
-        logger.error(f"Invalid duration: {duration}, must be positive")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Duration must be positive"
         )
@@ -401,7 +346,6 @@ def get_available_slots(
     # Check if room exists
     room = db.query(Room).filter(Room.id == room_id).first()
     if not room:
-        logger.error(f"Room not found: {room_id}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Room not found"
         )
@@ -442,5 +386,4 @@ def get_available_slots(
         slots.append({"start_time": current_time, "end_time": slot_end})
         current_time = slot_end
 
-    logger.debug(f"Found {len(slots)} available slots for room_id: {room_id}")
     return slots

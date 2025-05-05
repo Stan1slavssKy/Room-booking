@@ -5,7 +5,7 @@ from tests.conf_tests import client, clear_db, test_user_data, test_db, auth_hea
 
 
 @pytest.fixture
-def test_room(test_db):
+def test_room(test_db): # pylint: disable=redefined-outer-name
     room = Room(name="Conference Room A", capacity=10, location="Floor 1")
     test_db.add(room)
     test_db.commit()
@@ -23,13 +23,13 @@ def test_create_room_unauthorized():
         status.HTTP_403_FORBIDDEN,
     ]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_create_room_success(auth_headers):
     room_data = {"name": "Meeting Room", "capacity": 5, "location": "Floor 2"}
     response = client.post("/rooms/", json=room_data, headers=auth_headers)
     assert response.status_code == status.HTTP_201_CREATED
 
-
+# pylint: disable-next=redefined-outer-name
 def test_get_rooms_with_data(test_room):
     response = client.get("/rooms/")
     assert response.status_code == status.HTTP_200_OK
@@ -38,7 +38,7 @@ def test_get_rooms_with_data(test_room):
     assert data[0]["id"] == test_room.id
     assert data[0]["name"] == test_room.name
 
-
+# pylint: disable-next=redefined-outer-name
 def test_get_room_success(test_room):
     response = client.get(f"/rooms/{test_room.id}")
     assert response.status_code == status.HTTP_200_OK
@@ -54,6 +54,7 @@ def test_get_room_not_found():
     assert response.json()["detail"] == "Room not found"
 
 
+# pylint: disable-next=redefined-outer-name
 def test_update_room_unauthorized(test_room):
     response = client.put(f"/rooms/{test_room.id}", json={"name": "Updated Name"})
     assert response.status_code in [
@@ -61,7 +62,7 @@ def test_update_room_unauthorized(test_room):
         status.HTTP_403_FORBIDDEN,
     ]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_update_room_success(auth_headers, test_room):
     update_data = {
         "name": "Updated Conference Room",
@@ -77,7 +78,7 @@ def test_update_room_success(auth_headers, test_room):
     assert data["capacity"] == update_data["capacity"]
     assert data["location"] == update_data["location"]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_partial_update_room(auth_headers, test_room):
     update_data = {"capacity": 20}
     response = client.put(
@@ -89,14 +90,14 @@ def test_partial_update_room(auth_headers, test_room):
     assert data["name"] == test_room.name
     assert data["location"] == test_room.location
 
-
+# pylint: disable-next=redefined-outer-name
 def test_update_room_not_found(auth_headers):
     response = client.put(
         "/rooms/9999", json={"name": "Non-existent Room"}, headers=auth_headers
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
-
+# pylint: disable-next=redefined-outer-name
 def test_delete_room_unauthorized(test_room):
     response = client.delete(f"/rooms/{test_room.id}")
     assert response.status_code in [
@@ -104,14 +105,14 @@ def test_delete_room_unauthorized(test_room):
         status.HTTP_403_FORBIDDEN,
     ]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_delete_room_success(auth_headers, test_room, test_db):
     response = client.delete(f"/rooms/{test_room.id}", headers=auth_headers)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     deleted_room = test_db.query(Room).filter(Room.id == test_room.id).first()
     assert deleted_room is None
 
-
+# pylint: disable-next=redefined-outer-name
 def test_delete_room_not_found(auth_headers):
     response = client.delete("/rooms/9999", headers=auth_headers)
     assert response.status_code == status.HTTP_404_NOT_FOUND

@@ -80,7 +80,7 @@ def test_user_data():
 
 
 @pytest.fixture
-def test_user(test_db):
+def test_user(test_db): # pylint: disable=redefined-outer-name
     """Fixture to create a test user in the database"""
     username = get_next_user()
     user_data = {
@@ -100,7 +100,7 @@ def test_user(test_db):
 
 
 @pytest.fixture
-def auth_headers(test_db, test_user_data):
+def auth_headers(test_db, test_user_data): # pylint: disable=redefined-outer-name
     """Fixture to get authentication headers"""
     # Create test user directly in database
     hashed_password = get_password_hash(test_user_data["password"])

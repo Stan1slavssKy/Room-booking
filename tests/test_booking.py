@@ -56,7 +56,7 @@ TEST_OPTIMIZE_DATA = BookingInfo(
 
 # Fixtures
 @pytest.fixture
-def test_room(test_db):
+def test_room(test_db): # pylint: disable=redefined-outer-name
     room = Room(**TEST_ROOM_DATA)
     test_db.add(room)
     test_db.commit()
@@ -65,7 +65,7 @@ def test_room(test_db):
 
 
 @pytest.fixture
-def test_booking(test_db, test_room, test_user):
+def test_booking(test_db, test_room, test_user): # pylint: disable=redefined-outer-name
     booking = Booking(
         room_id=test_room.id,
         user_id=test_user.id,
@@ -80,6 +80,7 @@ def test_booking(test_db, test_room, test_user):
 
 
 # Tests
+# pylint: disable-next=redefined-outer-name
 def test_create_booking_success(auth_headers, test_room):
     create_booking_data = {
         "room_id": test_room.id,
@@ -95,6 +96,7 @@ def test_create_booking_success(auth_headers, test_room):
     assert data["start_time"] == TEST_BOOKING_DATA.start_time.isoformat()
 
 
+# pylint: disable-next=redefined-outer-name
 def test_create_booking_unauthorized(test_room):
     create_booking_data = {
         "room_id": test_room.id,
@@ -108,7 +110,7 @@ def test_create_booking_unauthorized(test_room):
         status.HTTP_403_FORBIDDEN,
     ]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_create_booking_invalid_time(auth_headers, test_room):
     create_booking_data = {
         "room_id": test_room.id,
@@ -125,7 +127,7 @@ def test_create_booking_invalid_time(auth_headers, test_room):
         in response.json()["detail"]
     )
 
-
+# pylint: disable-next=redefined-outer-name
 def test_create_booking_room_not_found(auth_headers):
     create_booking_data = {
         "room_id": 999,
@@ -136,7 +138,7 @@ def test_create_booking_room_not_found(auth_headers):
     response = client.post("/bookings/", json=create_booking_data, headers=auth_headers)
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
-
+# pylint: disable-next=redefined-outer-name
 def test_create_booking_insufficient_capacity(auth_headers, test_room):
     create_booking_data = {
         "room_id": test_room.id,
@@ -148,7 +150,7 @@ def test_create_booking_insufficient_capacity(auth_headers, test_room):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert "capacity insufficient" in response.json()["detail"]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_create_booking_overlapping(auth_headers, test_room, test_booking):
     create_booking_data = {
         "room_id": test_room.id,
@@ -160,7 +162,7 @@ def test_create_booking_overlapping(auth_headers, test_room, test_booking):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert "already booked" in response.json()["detail"]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_get_bookings(test_booking):
     response = client.get("/bookings/")
     assert response.status_code == status.HTTP_200_OK
@@ -168,7 +170,7 @@ def test_get_bookings(test_booking):
     assert len(data) == 1
     assert data[0]["id"] == test_booking.id
 
-
+# pylint: disable-next=redefined-outer-name
 def test_get_booking(test_booking):
     response = client.get(f"/bookings/{test_booking.id}")
     assert response.status_code == status.HTTP_200_OK
@@ -180,7 +182,7 @@ def test_get_booking_not_found():
     response = client.get("/bookings/999")
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
-
+# pylint: disable-next=redefined-outer-name
 def test_update_booking_unauthorized(test_booking):
     response = client.put(
         f"/bookings/{test_booking.id}", json={"purpose": "Should Fail"}
@@ -190,7 +192,7 @@ def test_update_booking_unauthorized(test_booking):
         status.HTTP_403_FORBIDDEN,
     ]
 
-
+# pylint: disable-next=redefined-outer-name
 def test_optimize_booking_success(auth_headers, test_room):
     optimize_request = {
         "room_id": test_room.id,
@@ -206,7 +208,7 @@ def test_optimize_booking_success(auth_headers, test_room):
     assert data["room_id"] == test_room.id
     assert data["purpose"] == TEST_OPTIMIZE_DATA.purpose
 
-
+# pylint: disable-next=redefined-outer-name
 def test_get_available_slots(auth_headers, test_room):
     test_date = date.today()
     response = client.get(
